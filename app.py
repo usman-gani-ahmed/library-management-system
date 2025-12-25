@@ -1,73 +1,136 @@
-import os
-import sqlite3
-from flask import Flask, render_template, request, redirect, url_for
+import mysql.connector
+from flask import Flask, render_template, request, redirect, url_for, session
 
+# --------------------------------------------------
+# APP CONFIG
+# --------------------------------------------------
 app = Flask(__name__)
 app.secret_key = "library_secret_key"
 
 # --------------------------------------------------
-# DATABASE SETUP (SAFE PATH)
+# MYSQL CONFIG (CHANGE PASSWORD)
 # --------------------------------------------------
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-DB_DIR = os.path.join(BASE_DIR, "database")
-DB_PATH = os.path.join(DB_DIR, "library.db")
-
-# Ensure database folder exists
-if not os.path.exists(DB_DIR):
-    os.makedirs(DB_DIR)
+DB_CONFIG = {
+    "host": "localhost",
+    "user": "root",
+    "password": "khuljasimsim",  # 🔴 change this
+    "database": "library_management"
+}
 
 
 def get_db_connection():
-    conn = sqlite3.connect(DB_PATH)
-    conn.row_factory = sqlite3.Row
-    return conn
-
-
-def init_db():
-    conn = get_db_connection()
-    cursor = conn.cursor()
-
-    cursor.execute("""
-        CREATE TABLE IF NOT EXISTS books (
-            id INTEGER PRIMARY KEY AUTOINCREMENT,
-            title TEXT NOT NULL,
-            author TEXT NOT NULL
-        )
-    """)
-
-    conn.commit()
-    conn.close()
+    return mysql.connector.connect(**DB_CONFIG)
 
 
 # --------------------------------------------------
-# ROUTES
+# AUTH ROUTES
+# --------------------------------------------------
+
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    if request.method == "POST":
+        name = request.form["name"]
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO users (name, email, password, role) VALUES (%s, %s, %s, %s)",
+            (name, email, password, "user")
+        )
+
+        conn.commit()
+        cursor.close()
+        conn.close()
+
+        return redirect(url_for("login"))
+
+    return render_template("signup.html")
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if request.method == "POST":
+        email = request.form["email"]
+        password = request.form["password"]
+
+        conn = get_db_connection()
+        cursor = conn.cursor(dictionary=True)
+
+        cursor.execute(
+            "SELECT * FROM users WHERE email=%s AND password=%s",
+            (email, password)
+        )
+
+        user = cursor.fetchone()
+
+        cursor.close()
+        conn.close()
+
+        if user:
+            session["user_id"] = user["id"]
+            session["role"] = user["role"]
+            return redirect(url_for("dashboard"))
+
+    return render_template("login.html")
+
+
+@app.route("/logout")
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
+
+# --------------------------------------------------
+# DASHBOARD
 # --------------------------------------------------
 
 @app.route("/")
-def home():
+def dashboard():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
     return render_template("dashboard.html")
 
+
+# --------------------------------------------------
+# BOOK ROUTES
+# --------------------------------------------------
 
 @app.route("/books")
 def books():
     conn = get_db_connection()
-    books = conn.execute("SELECT * FROM books").fetchall()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("SELECT * FROM books")
+    books = cursor.fetchall()
+
+    cursor.close()
     conn.close()
+
     return render_template("books.html", books=books)
 
 
 @app.route("/add-book", methods=["GET", "POST"])
 def add_book():
+    if session.get("role") != "admin":
+        return redirect(url_for("books"))
+
     if request.method == "POST":
         title = request.form["title"]
         author = request.form["author"]
 
         conn = get_db_connection()
-        conn.execute(
-            "INSERT INTO books (title, author) VALUES (?, ?)",
+        cursor = conn.cursor()
+
+        cursor.execute(
+            "INSERT INTO books (title, author) VALUES (%s, %s)",
             (title, author)
         )
+
         conn.commit()
+        cursor.close()
         conn.close()
 
         return redirect(url_for("books"))
@@ -76,8 +139,71 @@ def add_book():
 
 
 # --------------------------------------------------
-# RUN APP
+# ISSUE / RETURN
+# --------------------------------------------------
+
+@app.route("/issue/<int:book_id>")
+def issue_book(book_id):
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "INSERT INTO issues (user_id, book_id, status) VALUES (%s, %s, %s)",
+        (session["user_id"], book_id, "issued")
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("my_books"))
+
+
+@app.route("/my-books")
+def my_books():
+    if "user_id" not in session:
+        return redirect(url_for("login"))
+
+    conn = get_db_connection()
+    cursor = conn.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT issues.id, books.title, books.author
+        FROM issues
+        JOIN books ON books.id = issues.book_id
+        WHERE issues.user_id=%s AND issues.status='issued'
+    """, (session["user_id"],))
+
+    books = cursor.fetchall()
+
+    cursor.close()
+    conn.close()
+
+    return render_template("my_books.html", books=books)
+
+
+@app.route("/return/<int:issue_id>")
+def return_book(issue_id):
+    conn = get_db_connection()
+    cursor = conn.cursor()
+
+    cursor.execute(
+        "UPDATE issues SET status='returned' WHERE id=%s",
+        (issue_id,)
+    )
+
+    conn.commit()
+    cursor.close()
+    conn.close()
+
+    return redirect(url_for("my_books"))
+
+
+# --------------------------------------------------
+# RUN APPLICATION (ONLY ONE MAIN BLOCK)
 # --------------------------------------------------
 if __name__ == "__main__":
-    init_db()
-    app.run(debug=True)
+   app.run(debug=True)

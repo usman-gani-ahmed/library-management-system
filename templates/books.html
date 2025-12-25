@@ -1,20 +1,36 @@
 {% extends "base.html" %}
 
 {% block content %}
-<h2>Books List</h2>
+<h2>Books</h2>
 
-<a href="/add-book">Add New Book</a>
-<br><br>
+{% if session.get("role") == "admin" %}
+    <p>
+        <a href="/add-book">Add New Book</a>
+    </p>
+{% endif %}
 
 {% if books %}
-<ul>
+<table border="1" cellpadding="8">
+    <tr>
+        <th>Title</th>
+        <th>Author</th>
+        <th>Action</th>
+    </tr>
+
     {% for book in books %}
-        <li>{{ book["title"] }} — {{ book["author"] }}</li>
+    <tr>
+        <td>{{ book.title }}</td>
+        <td>{{ book.author }}</td>
+        <td>
+            <a href="/issue/{{ book.id }}">Issue</a>
+        </td>
+    </tr>
     {% endfor %}
-</ul>
+</table>
 {% else %}
 <p>No books available.</p>
 {% endif %}
 
 {% endblock %}
+
 

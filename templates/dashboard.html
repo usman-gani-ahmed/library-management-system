@@ -2,7 +2,22 @@
 
 {% block content %}
 <h2>Dashboard</h2>
+
 <p>Welcome to the Library Management Website.</p>
-<a href="/books">View Books</a>
+
+<ul>
+    <li><a href="/books">View All Books</a></li>
+    <li><a href="/my-books">My Issued Books</a></li>
+</ul>
+
+{% if session.get("role") == "admin" %}
+    <p><strong>Admin Options:</strong></p>
+    <ul>
+        <li><a href="/add-book">Add New Book</a></li>
+    </ul>
+{% endif %}
+
 {% endblock %}
+
+
 
