@@ -3,14 +3,24 @@
 {% block content %}
 <h2>Login</h2>
 
-<form>
-    <label>Email:</label><br>
-    <input type="email"><br><br>
+<form method="POST" action="/login">
+    <div>
+        <label for="email">Email:</label><br>
+        <input type="email" id="email" name="email" required>
+    </div>
+    <br>
 
-    <label>Password:</label><br>
-    <input type="password"><br><br>
+    <div>
+        <label for="password">Password:</label><br>
+        <input type="password" id="password" name="password" required>
+    </div>
+    <br>
 
     <button type="submit">Login</button>
 </form>
 
+<p>
+    Don’t have an account?
+    <a href="/signup">Signup here</a>
+</p>
 {% endblock %}
