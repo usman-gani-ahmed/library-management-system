@@ -1,32 +1,193 @@
-{% extends "base.html" %}
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>Choose: Sign In or Log In</title>
+    <style>
+        :root{
+            --bg:#f4f7fb; --card:#fff; --accent:#2b6ef6; --muted:#6b7280;
+        }
+        *{box-sizing:border-box}
+        body{
+            margin:0; font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,Helvetica,Arial;
+            background:linear-gradient(180deg,#eef2ff 0%,var(--bg) 100%); min-height:100vh;
+            display:flex; align-items:center; justify-content:center; padding:32px;
+        }
+        .container{
+            width:100%; max-width:920px; display:grid; grid-template-columns:380px 1fr;
+            gap:28px; align-items:center;
+        }
+        .panel{
+            background:var(--card); border-radius:12px; padding:22px;
+            box-shadow:0 6px 24px rgba(32,40,60,0.08);
+        }
+        .chooser{display:flex; gap:12px; align-items:center; justify-content:center; padding:8px 4px}
+        .option{
+            flex:1; text-align:center; padding:12px 10px; border-radius:10px; cursor:pointer;
+            border:1px solid transparent; color:var(--muted); font-weight:600;
+            user-select:none;
+        }
+        .option.active{ background:linear-gradient(90deg,rgba(43,110,246,0.08),rgba(43,110,246,0.04));
+            border-color:rgba(43,110,246,0.2); color:var(--accent);
+        }
+        h1{margin:0 0 8px; font-size:20px}
+        p.lead{margin:0 0 18px; color:var(--muted); font-size:14px}
+        form{display:flex; flex-direction:column; gap:12px}
+        label{font-size:13px; color:var(--muted)}
+        input[type="text"], input[type="email"], input[type="password"]{
+            padding:10px 12px; border-radius:8px; border:1px solid #e6e9ef; background:#fff; outline:none;
+            font-size:14px;
+        }
+        input:focus{box-shadow:0 0 0 4px rgba(43,110,246,0.06); border-color:rgba(43,110,246,0.2)}
+        .actions{display:flex; gap:10px; align-items:center; margin-top:6px}
+        button.primary{
+            background:var(--accent); color:#fff; border:none; padding:10px 14px; border-radius:8px; cursor:pointer;
+            font-weight:600;
+        }
+        button.ghost{
+            background:transparent; border:1px solid #e6e9ef; padding:10px 12px; border-radius:8px; cursor:pointer;
+        }
+        .note{font-size:13px; color:var(--muted)}
+        /* right side preview */
+        .preview{
+            display:flex; flex-direction:column; gap:10px; align-items:center; justify-content:center; padding:28px;
+            text-align:center;
+        }
+        .preview h2{margin:0; color:#0f1724}
+        .preview p{margin:0; color:var(--muted)}
+        .small{font-size:12px; color:var(--muted)}
+        /* responsive */
+        @media (max-width:880px){
+            .container{grid-template-columns:1fr; max-width:680px}
+        }
+    </style>
+</head>
+<body>
+    <main class="container" role="main">
+        <section class="panel" aria-labelledby="chooseTitle">
+            <div id="chooseTitle" style="display:none">Auth chooser</div>
+            <div class="chooser" role="tablist" aria-label="Authentication options">
+                <div id="btn-signin" class="option active" role="tab" aria-selected="true" tabindex="0">Sign In</div>
+                <div id="btn-login"  class="option" role="tab" aria-selected="false" tabindex="0">Log In</div>
+            </div>
 
-{% block content %}
-<h2>Signup</h2>
+            <h1 id="formTitle">Create an account</h1>
+            <p class="lead" id="formDesc">Quickly create your account to access the library dashboard.</p>
 
-<form method="POST" action="/signup">
-    <div>
-        <label for="name">Full Name:</label><br>
-        <input type="text" id="name" name="name" required>
-    </div>
-    <br>
+            <!-- Sign In (register) -->
+            <form id="form-signin" autocomplete="off" novalidate>
+                <label for="name">Full name</label>
+                <input id="name" name="name" type="text" placeholder="Jane Doe" required>
 
-    <div>
-        <label for="email">Email:</label><br>
-        <input type="email" id="email" name="email" required>
-    </div>
-    <br>
+                <label for="email-s">Email</label>
+                <input id="email-s" name="email" type="email" placeholder="jane@example.com" required>
 
-    <div>
-        <label for="password">Password:</label><br>
-        <input type="password" id="password" name="password" required>
-    </div>
-    <br>
+                <label for="password-s">Password</label>
+                <input id="password-s" name="password" type="password" placeholder="Create a password" required>
 
-    <button type="submit">Create Account</button>
-</form>
+                <label for="confirm-s">Confirm password</label>
+                <input id="confirm-s" name="confirm" type="password" placeholder="Repeat password" required>
 
-<p>
-    Already have an account?
-    <a href="/login">Login here</a>
-</p>
-{% endblock %}
+                <div class="actions">
+                    <button type="submit" class="primary">Sign In</button>
+                    <button type="button" class="ghost" id="switch-to-login">Have an account? Log In</button>
+                </div>
+                <p class="note">By signing in you agree to the terms and privacy policy.</p>
+            </form>
+
+            <!-- Log In -->
+            <form id="form-login" style="display:none" autocomplete="off" novalidate>
+                <label for="email-l">Email</label>
+                <input id="email-l" name="email" type="email" placeholder="you@example.com" required>
+
+                <label for="password-l">Password</label>
+                <input id="password-l" name="password" type="password" placeholder="Your password" required>
+
+                <div style="display:flex; justify-content:space-between; align-items:center; margin-top:6px">
+                    <label style="display:flex; gap:8px; align-items:center; font-size:13px; color:var(--muted)">
+                        <input type="checkbox" id="remember" style="width:16px;height:16px"> Remember
+                    </label>
+                    <a href="#" class="small" style="color:var(--accent); text-decoration:none">Forgot password?</a>
+                </div>
+
+                <div class="actions">
+                    <button type="submit" class="primary">Log In</button>
+                    <button type="button" class="ghost" id="switch-to-signin">Create account</button>
+                </div>
+                <p class="note">Secure sign in for library members and admins.</p>
+            </form>
+        </section>
+
+        <aside class="panel preview" aria-hidden="false">
+            <svg width="84" height="84" viewBox="0 0 24 24" fill="none" style="margin-bottom:6px">
+                <rect width="24" height="24" rx="6" fill="#eef2ff"></rect>
+                <path d="M8 11c1.657 0 3-1.343 3-3S9.657 5 8 5 5 6.343 5 8s1.343 3 3 3zM5 18a6 6 0 0 1 6-6h2" stroke="#2b6ef6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+            <h2 id="previewTitle">Welcome</h2>
+            <p id="previewDesc">Choose to sign in or log in to continue to the library management system.</p>
+            <p class="small">This page only demonstrates the choice UI; connect forms to your backend for real authentication.</p>
+        </aside>
+    </main>
+
+    <script>
+        // Elements
+        const btnSignin = document.getElementById('btn-signin');
+        const btnLogin = document.getElementById('btn-login');
+        const formSignin = document.getElementById('form-signin');
+        const formLogin = document.getElementById('form-login');
+        const formTitle = document.getElementById('formTitle');
+        const formDesc = document.getElementById('formDesc');
+        const previewTitle = document.getElementById('previewTitle');
+        const previewDesc = document.getElementById('previewDesc');
+        const switchToLogin = document.getElementById('switch-to-login');
+        const switchToSignin = document.getElementById('switch-to-signin');
+
+        function show(mode){
+            const isSign = mode === 'signin';
+            btnSignin.classList.toggle('active', isSign);
+            btnLogin.classList.toggle('active', !isSign);
+            btnSignin.setAttribute('aria-selected', isSign);
+            btnLogin.setAttribute('aria-selected', !isSign);
+
+            formSignin.style.display = isSign ? '' : 'none';
+            formLogin.style.display = isSign ? 'none' : '';
+
+            formTitle.textContent = isSign ? 'Create an account' : 'Welcome back';
+            formDesc.textContent = isSign ? 'Quickly create your account to access the library dashboard.' : 'Sign in to access your library account.';
+            previewTitle.textContent = isSign ? 'Create account' : 'Log in';
+            previewDesc.textContent = isSign ? 'Setup a new user profile' : 'Enter your credentials';
+        }
+
+        // initial state
+        show('signin');
+
+        // event listeners
+        btnSignin.addEventListener('click', () => show('signin'));
+        btnLogin.addEventListener('click', () => show('login'));
+        btnSignin.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); show('signin'); }});
+        btnLogin.addEventListener('keydown', e => { if(e.key==='Enter' || e.key===' ') { e.preventDefault(); show('login'); }});
+        switchToLogin.addEventListener('click', () => show('login'));
+        switchToSignin.addEventListener('click', () => show('signin'));
+
+        // simple front-end validation + demo submit handlers
+        formSignin.addEventListener('submit', e => {
+            e.preventDefault();
+            const p = document.getElementById('password-s').value;
+            const c = document.getElementById('confirm-s').value;
+            if (!p || !c || p !== c) {
+                alert('Passwords must match and not be empty.');
+                return;
+            }
+            alert('Sign in (register) submitted — integrate with your backend.');
+            formSignin.reset();
+        });
+
+        formLogin.addEventListener('submit', e => {
+            e.preventDefault();
+            alert('Log in submitted — integrate with your backend.');
+            formLogin.reset();
+        });
+    </script>
+</body>
+</html>
