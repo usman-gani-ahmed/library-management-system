@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card">
+    <div class="card-head">
+        <div>
+            <div class="card-title">Books</div>
+            <div class="card-sub">Browse available books</div>
+        </div>
+        <div class="row-right">
+            <form method="get" action="{{ url_for('books') }}" style="display:flex; gap:8px; align-items:center;">
+                <input class="input" type="search" name="q" placeholder="Search title or author..." value="{{ q }}" style="min-width:220px;">
+                <button class="btn secondary" type="submit">Search</button>
+            </form>
+        </div>
+    </div>
+
+    {% if books %}
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>Title</th>
+                    <th>Author</th>
+                    <th style="width:220px;">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for book in books %}
+                <tr>
+                    <td>{{ book.title }}</td>
+                    <td>{{ book.author }}</td>
+                    <td>
+                        {% if session.get('user_id') %}
+                            <a class="action-link" href="{{ url_for('issue_book', book_id=book.id) }}">Issue</a>
+                        {% endif %}
+
+                        {% if session.get('role') == 'admin' %}
+                            <a class="action-link" href="{{ url_for('edit_book', book_id=book.id) }}">Edit</a>
+                            <form action="{{ url_for('delete_book', book_id=book.id) }}" method="post" style="display:inline;">
+                                <button class="action-link danger" type="submit" onclick="return confirmDelete()">Delete</button>
+                            </form>
+                        {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty">No books found. {% if session.get('role') == 'admin' %}<a href="{{ url_for('add_book') }}">Add a book</a>{% endif %}</div>
+    {% endif %}
+</div>
+{% endblock %}

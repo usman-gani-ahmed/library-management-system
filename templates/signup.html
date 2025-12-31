@@ -1,2 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="card" style="max-width:480px; margin:auto;">
+    <h2>Create Account</h2>
+    <form method="post" action="{{ url_for('signup') }}" class="form">
+        <label for="name">Full name</label>
+        <input class="input" id="name" name="name" type="text" required>
 
+        <label for="email">Email</label>
+        <input class="input" id="email" name="email" type="email" required>
 
+        <label for="password">Password</label>
+        <input class="input" id="password" name="password" type="password" required>
+        <div class="note">Use a password you can remember. For production, use stronger policies.</div>
+
+        <div style="margin-top:12px;">
+            <button class="btn" type="submit">Signup</button>
+            <a class="btn ghost" href="{{ url_for('login') }}">Already have an account?</a>
+        </div>
+    </form>
+</div>
+{% endblock %}
