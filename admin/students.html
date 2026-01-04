@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Student Approvals</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<main class="container">
+
+  <h2>Student Approvals</h2>
+  <p class="subtitle">
+    Review and approve student access requests.
+  </p>
+
+  <div class="card">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Roll No</th>
+          <th>Course</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="studentsTable">
+        <!-- Injected by JS -->
+      </tbody>
+    </table>
+
+    <div id="emptyState" class="empty" style="display:none">
+      No student requests found.
+    </div>
+
+  </div>
+
+</main>
+
+<script src="../js/admin/students.js"></script>
+
+</body>
+</html>

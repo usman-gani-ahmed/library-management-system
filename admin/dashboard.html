@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Admin Dashboard</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<div class="admin-layout">
+
+  <!-- ===== SIDEBAR ===== -->
+  <aside class="admin-sidebar">
+    <h2 class="sidebar-title">Admin Panel</h2>
+
+    <div class="admin-menu">
+      <button onclick="loadPage('students.html')">👨‍🎓 Student Approvals</button>
+      <button onclick="loadPage('books.html')">📚 Manage Books</button>
+      <button onclick="loadPage('requests.html')">📥 Book Requests</button>
+      <button onclick="loadPage('issues.html')">📖 Issued Books</button>
+      <button onclick="loadPage('analytics.html')">📊 Analytics</button>
+    </div>
+  </aside>
+
+  <!-- ===== CONTENT ===== -->
+  <section class="admin-content">
+
+    <!-- TOP HEADER -->
+    <header class="admin-header">
+      <h2>Admin Dashboard</h2>
+      <button class="btn secondary" onclick="logout()">Logout</button>
+    </header>
+
+    <!-- IFRAME (ADMIN PAGES LOAD HERE) -->
+    <iframe
+      id="adminFrame"
+      class="admin-frame"
+      src="./students.html">
+    </iframe>
+
+  </section>
+
+</div>
+
+<script src="../js/auth.js"></script>
+
+<script>
+  /* ======================================================
+     IFRAME NAVIGATION (SAFE & FIXED)
+  ====================================================== */
+
+  function loadPage(page) {
+    // Always load from admin folder
+    document.getElementById("adminFrame").src = "./" + page;
+  }
+</script>
+
+</body>
+</html>

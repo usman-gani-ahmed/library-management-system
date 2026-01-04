@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Student Dashboard</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <h1>Student Dashboard</h1>
+  <button class="btn secondary" onclick="logout()">Logout</button>
+</header>
+
+<!-- ===== CONTENT ===== -->
+<main class="container">
+
+  <div class="card" id="statusCard">
+    <h2 id="welcomeText">Welcome</h2>
+    <p class="subtitle" id="statusText"></p>
+  </div>
+
+  <div class="grid cols-2" style="margin-top:24px" id="studentActions" style="display:none">
+
+    <div class="card">
+      <h3>Browse Books</h3>
+      <p>View available books and request issues.</p>
+      <button class="btn" onclick="location.href='catalog.html'">
+        Open Catalog
+      </button>
+    </div>
+
+    <div class="card">
+      <h3>My Books</h3>
+      <p>View your issued books.</p>
+      <button class="btn" onclick="location.href='mybooks.html'">
+        View My Books
+      </button>
+    </div>
+
+  </div>
+
+</main>
+
+<script src="../js/auth.js"></script>
+
+<script>
+/* ======================================================
+   STUDENT DASHBOARD – FIXED & SIMPLE
+====================================================== */
+
+// 1️⃣ Get who is logged in (identity only)
+const activeStudent = JSON.parse(localStorage.getItem("activeStudent"));
+
+// 2️⃣ Get latest students list (updated by admin)
+const students = JSON.parse(localStorage.getItem("students") || []);
+
+// 3️⃣ Safety check
+if (!activeStudent) {
+  alert("Please login as student first");
+  window.location.href = "../index.html";
+}
+
+// 4️⃣ Find THIS student in admin-approved list
+const me = students.find(
+  s => s.roll === activeStudent.roll && s.course === activeStudent.course
+);
+
+// 5️⃣ If student record is missing
+if (!me) {
+  alert("Student record not found. Please submit request again.");
+  window.location.href = "../index.html";
+}
+
+// 6️⃣ Update UI
+document.getElementById("welcomeText").innerText =
+  `Welcome, ${me.name}`;
+
+if (!me.approved) {
+  document.getElementById("statusText").innerText =
+    "Your account is pending admin approval. Please check back later.";
+
+  document.getElementById("studentActions").style.display = "none";
+} else {
+  document.getElementById("statusText").innerText =
+    "Your account is approved. You can now access the library.";
+
+  document.getElementById("studentActions").style.display = "grid";
+}
+</script>
+
+</body>
+</html>

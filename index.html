@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Library Management System</title>
+
+  <link rel="stylesheet" href="css/style.css">
+</head>
+
+<body>
+
+<!-- ================= LANDING ================= -->
+<main class="landing">
+  <div class="landing-container">
+
+    <h1 class="title">Library Management System</h1>
+    <p class="subtitle">
+      Offline Library System for College Students & Admin
+    </p>
+
+    <div class="role-grid">
+      <div class="role-card">
+        <h2>Admin</h2>
+        <p>Manage students, books, requests & issues</p>
+        <button class="btn" onclick="openAdmin()">I am Admin</button>
+      </div>
+
+      <div class="role-card">
+        <h2>Student</h2>
+        <p>Browse books & request issues</p>
+        <button class="btn secondary" onclick="openStudent()">I am Student</button>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<!-- ================= OVERLAY ================= -->
+<div class="overlay" id="overlay" onclick="closeAll()"></div>
+
+<!-- ================= ADMIN MODAL ================= -->
+<div class="modal" id="adminModal">
+  <div class="modal-box">
+
+    <h2>Admin Access</h2>
+
+    <input
+      type="password"
+      class="input"
+      id="adminCode"
+      placeholder="Enter admin code"
+    >
+
+    <div style="display:flex; gap:12px">
+      <button class="btn" onclick="verifyAdmin()">Enter</button>
+      <button class="btn secondary" onclick="closeAll()">Back</button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= STUDENT MODAL ================= -->
+<div class="modal" id="studentModal">
+  <div class="modal-box">
+
+    <!-- FORM STATE -->
+    <div id="studentForm">
+      <h2>Student Access</h2>
+
+      <input class="input" id="sName" placeholder="Full Name">
+      <input class="input" id="sRoll" placeholder="Roll Number (numbers only)">
+      <input class="input" id="sCourse" placeholder="Course">
+
+      <div style="display:flex; gap:12px">
+        <button class="btn" onclick="submitStudent()">Continue</button>
+        <button class="btn secondary" onclick="closeAll()">Back</button>
+      </div>
+    </div>
+
+    <!-- WAITING STATE -->
+    <div id="studentWaiting" style="display:none">
+      <h2>Request Submitted</h2>
+      <p class="subtitle">
+        Your request has been sent to the admin.
+      </p>
+
+      <div class="card" style="margin-top:16px">
+        ⏳ <strong>Status:</strong> Waiting for approval
+      </div>
+
+      <button
+        class="btn secondary"
+        style="margin-top:16px"
+        onclick="closeAll()">
+        Close
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- ================= SCRIPT ================= -->
+<script>
+/* ======================================================
+   MODAL HANDLING
+====================================================== */
+const overlay = document.getElementById("overlay");
+const adminModal = document.getElementById("adminModal");
+const studentModal = document.getElementById("studentModal");
+
+function closeAll() {
+  overlay.style.display = "none";
+  adminModal.style.display = "none";
+  studentModal.style.display = "none";
+}
+
+function openAdmin() {
+  closeAll();
+  overlay.style.display = "block";
+  adminModal.style.display = "flex";
+}
+
+function openStudent() {
+  closeAll();
+  overlay.style.display = "block";
+  studentModal.style.display = "flex";
+}
+
+/* ======================================================
+   ADMIN AUTH
+====================================================== */
+const ADMIN_CODE = "LIB-ADMIN-2026";
+
+function verifyAdmin() {
+  const code = document.getElementById("adminCode").value.trim();
+  if (code === ADMIN_CODE) {
+    localStorage.setItem("role", "admin");
+    window.location.href = "admin/dashboard.html";
+  } else {
+    alert("Invalid admin code");
+  }
+}
+
+/* ======================================================
+   STUDENT REQUEST
+====================================================== */
+function submitStudent() {
+  const name = document.getElementById("sName").value.trim();
+  const roll = document.getElementById("sRoll").value.trim();
+  const course = document.getElementById("sCourse").value.trim();
+
+  if (!name || !roll || !course) {
+    alert("Please fill all fields");
+    return;
+  }
+
+  if (!/^[0-9]+$/.test(roll)) {
+    alert("Roll number must contain only numbers");
+    return;
+  }
+
+  const students = JSON.parse(localStorage.getItem("students") || "[]");
+
+  // 🔍 Find student in database
+  let student = students.find(
+    s => s.roll === Number(roll) && s.course === course
+  );
+
+  // 🆕 If student does not exist, create request
+  if (!student) {
+    student = {
+      id: "stu_" + Date.now(),
+      name,
+      roll: Number(roll),
+      course,
+      approved: false
+    };
+    students.push(student);
+    localStorage.setItem("students", JSON.stringify(students));
+  }
+
+  // ✅ Save ONLY identity
+  localStorage.setItem(
+    "activeStudent",
+    JSON.stringify({
+      roll: student.roll,
+      course: student.course
+    })
+  );
+
+  // ✅ IF APPROVED → DIRECT ACCESS
+  if (student.approved) {
+    window.location.href = "student/dashboard.html";
+    return;
+  }
+
+  // ⏳ ELSE → SHOW WAITING STATE
+  document.getElementById("studentForm").style.display = "none";
+  document.getElementById("studentWaiting").style.display = "block";
+}
+</script>
+
+</body>
+</html>

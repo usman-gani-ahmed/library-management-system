@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Issued Books</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<main class="container">
+
+  <h2>Issued Books</h2>
+  <p class="subtitle">
+    Track all books currently issued to students.
+  </p>
+
+  <div class="card">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Roll No</th>
+          <th>Book Title</th>
+          <th>Issue Date</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="issuesTable">
+        <!-- Injected by JS -->
+      </tbody>
+    </table>
+
+    <div id="emptyState" class="empty" style="display:none">
+      No books are currently issued.
+    </div>
+
+  </div>
+
+</main>
+
+<script src="../js/admin/issues.js"></script>
+
+</body>
+</html>

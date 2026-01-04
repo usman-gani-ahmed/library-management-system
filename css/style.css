@@ -1,0 +1,338 @@
+/* ======================================================
+   ROOT VARIABLES
+====================================================== */
+:root {
+  --bg-main: #0f172a;
+  --bg-surface: #020617;
+  --border-color: #334155;
+  --text-main: #e5e7eb;
+  --text-muted: #94a3b8;
+  --primary: #7c3aed;
+  --success: #22c55e;
+  --warning: #facc15;
+  --danger: #ef4444;
+  --radius: 14px;
+}
+
+/* ======================================================
+   GLOBAL RESET
+====================================================== */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+}
+
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  min-height: 100vh;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+/* ======================================================
+   LAYOUT HELPERS
+====================================================== */
+.container {
+  max-width: 1200px;
+  margin: auto;
+  padding: 24px;
+}
+
+.grid {
+  display: grid;
+  gap: 20px;
+}
+
+.grid.cols-2 { grid-template-columns: repeat(2, 1fr); }
+.grid.cols-3 { grid-template-columns: repeat(3, 1fr); }
+.grid.cols-4 { grid-template-columns: repeat(4, 1fr); }
+
+@media (max-width: 900px) {
+  .grid.cols-2,
+  .grid.cols-3,
+  .grid.cols-4 {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ======================================================
+   CARDS
+====================================================== */
+.card {
+  background: var(--bg-surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  border: 1px solid var(--border-color);
+}
+
+.card h2,
+.card h3 {
+  margin-bottom: 8px;
+}
+
+.card p {
+  color: var(--text-muted);
+  font-size: 14px;
+}
+
+/* ======================================================
+   BUTTONS
+====================================================== */
+.btn {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  padding: 10px 18px;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: opacity 0.2s ease, transform 0.1s ease;
+}
+
+.btn:hover { opacity: 0.9; }
+.btn:active { transform: scale(0.97); }
+
+.btn.secondary {
+  background: transparent;
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+}
+
+.btn.success { background: var(--success); }
+.btn.danger { background: var(--danger); }
+
+.btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* ======================================================
+   INPUTS
+====================================================== */
+.input,
+select {
+  width: 100%;
+  padding: 12px 14px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  border-radius: 10px;
+  color: var(--text-main);
+  font-size: 14px;
+  margin-bottom: 14px;
+}
+
+.input::placeholder {
+  color: var(--text-muted);
+}
+
+.input:focus,
+select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 2px rgba(124, 58, 237, 0.25);
+}
+
+/* ======================================================
+   HEADERS
+====================================================== */
+.header,
+.admin-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 24px;
+  background: var(--bg-surface);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.header h1,
+.admin-header h2 {
+  font-size: 22px;
+}
+
+/* ======================================================
+   TABLES
+====================================================== */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+}
+
+.table th,
+.table td {
+  padding: 12px;
+  border-bottom: 1px solid var(--border-color);
+  text-align: left;
+  font-size: 14px;
+}
+
+.table th {
+  color: var(--text-muted);
+  font-weight: 500;
+}
+
+/* ======================================================
+   BADGES
+====================================================== */
+.badge {
+  display: inline-block;
+  padding: 4px 10px;
+  font-size: 12px;
+  border-radius: 999px;
+  border: 1px solid var(--border-color);
+}
+
+.badge.success { color: var(--success); }
+.badge.warning { color: var(--warning); }
+.badge.danger  { color: var(--danger); }
+
+/* ======================================================
+   MODALS (INDEX PAGE)
+====================================================== */
+.overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  display: none;
+  z-index: 10;
+}
+
+.modal {
+  position: fixed;
+  inset: 0;
+  display: none;
+  align-items: center;
+  justify-content: center;
+  z-index: 11;
+}
+
+.modal-box {
+  background: var(--bg-surface);
+  padding: 24px;
+  border-radius: var(--radius);
+  width: 90%;
+  max-width: 420px;
+  border: 1px solid var(--border-color);
+}
+
+.modal-box h2 {
+  margin-bottom: 16px;
+}
+
+/* ======================================================
+   LANDING PAGE (INDEX)
+====================================================== */
+.landing {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.landing-container {
+  text-align: center;
+  max-width: 900px;
+  padding: 24px;
+}
+
+.title {
+  font-size: 40px;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  color: var(--text-muted);
+  margin-bottom: 40px;
+}
+
+.role-grid {
+  display: grid;
+  gap: 24px;
+}
+
+@media (min-width: 900px) {
+  .role-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.role-card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-color);
+  padding: 28px;
+  border-radius: var(--radius);
+}
+
+.role-card h2 {
+  margin-bottom: 10px;
+}
+
+/* ======================================================
+   EMPTY STATE
+====================================================== */
+.empty {
+  text-align: center;
+  color: var(--text-muted);
+  padding: 32px;
+}
+
+/* ======================================================
+   ADMIN DASHBOARD (IFRAME BASED)
+====================================================== */
+.admin-layout {
+  display: flex;
+  height: 100vh;
+}
+
+.admin-sidebar {
+  width: 260px;
+  background: #050b1f;
+  border-right: 1px solid rgba(255,255,255,0.08);
+  padding: 24px;
+}
+
+.sidebar-title {
+  margin-bottom: 24px;
+  font-size: 20px;
+}
+
+.admin-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.admin-menu button {
+  background: transparent;
+  border: none;
+  color: var(--text-main);
+  padding: 12px 16px;
+  border-radius: 8px;
+  text-align: left;
+  cursor: pointer;
+  font-size: 15px;
+  transition: background 0.2s ease;
+}
+
+.admin-menu button:hover {
+  background: rgba(124, 58, 237, 0.18);
+}
+
+.admin-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin-frame {
+  flex: 1;
+  border: none;
+  width: 100%;
+}

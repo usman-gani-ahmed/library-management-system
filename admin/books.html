@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Manage Books</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<main class="container">
+
+  <h2>Manage Books</h2>
+  <p class="subtitle">
+    Add and manage library books.
+  </p>
+
+  <!-- ADD BOOK -->
+  <div class="card">
+    <h3>Add New Book</h3>
+
+    <input class="input" id="bookTitle" placeholder="Book Title">
+    <input class="input" id="bookAuthor" placeholder="Author">
+    <input class="input" id="bookCourse" placeholder="Course">
+    <input class="input" id="bookQuantity" type="number" min="1" placeholder="Quantity">
+    <input class="input" type="file" id="bookImage" accept="image/*">
+
+    <button class="btn" onclick="addBook()">Add Book</button>
+  </div>
+
+  <!-- BOOK LIST -->
+  <div class="card" style="margin-top:24px">
+    <h3>Books List</h3>
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Cover</th>
+          <th>Title</th>
+          <th>Author</th>
+          <th>Course</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="booksTable"></tbody>
+    </table>
+
+    <div id="emptyState" class="empty" style="display:none">
+      No books added yet.
+    </div>
+  </div>
+
+</main>
+
+<script src="../js/admin/books.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Book Catalog</title>
+
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<!-- ===== HEADER ===== -->
+<header class="header">
+  <h1>Book Catalog</h1>
+  <button class="btn secondary" onclick="location.href='dashboard.html'">
+    Back
+  </button>
+</header>
+
+<!-- ===== CONTENT ===== -->
+<main class="container">
+
+  <div class="grid cols-3" id="booksGrid">
+    <!-- Injected by JS -->
+  </div>
+
+  <div id="emptyState" class="empty" style="display:none">
+    No books available at the moment.
+  </div>
+
+</main>
+
+<script src="../js/student/catalog.js"></script>
+
+</body>
+</html>

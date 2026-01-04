@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Book Requests</title>
+  <link rel="stylesheet" href="../css/style.css">
+</head>
+
+<body>
+
+<main class="container">
+
+  <h2>Book Requests</h2>
+  <p class="subtitle">
+    Review and process book issue requests from students.
+  </p>
+
+  <div class="card">
+
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Student Name</th>
+          <th>Roll No</th>
+          <th>Book Title</th>
+          <th>Status</th>
+          <th>Action</th>
+        </tr>
+      </thead>
+
+      <tbody id="requestsTable">
+        <!-- Injected by JS -->
+      </tbody>
+    </table>
+
+    <div id="emptyState" class="empty" style="display:none">
+      No book requests found.
+    </div>
+
+  </div>
+
+</main>
+
+<script src="../js/admin/requests.js"></script>
+
+</body>
+</html>
