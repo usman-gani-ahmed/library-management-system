@@ -1,44 +1,64 @@
 /* ======================================================
-   ADMIN ISSUED BOOKS LOGIC (IFRAME SAFE)
+   ADMIN – ISSUED BOOKS (FINAL & CORRECT)
 ====================================================== */
 
+document.addEventListener("DOMContentLoaded", loadIssues);
+
 function loadIssues() {
-  const issues = JSON.parse(localStorage.getItem("issuedBooks") || "[]");
+  const issuedBooks = JSON.parse(localStorage.getItem("issuedBooks")) || [];
+  const books = JSON.parse(localStorage.getItem("books")) || [];
   const table = document.getElementById("issuesTable");
   const empty = document.getElementById("emptyState");
 
   table.innerHTML = "";
 
-  if (issues.length === 0) {
+  if (issuedBooks.length === 0) {
     empty.style.display = "block";
     return;
   }
 
   empty.style.display = "none";
 
-  issues.forEach((issue, index) => {
-    table.innerHTML += `
-      <tr>
-        <td>${issue.studentName}</td>
-        <td>${issue.roll}</td>
-        <td>${issue.bookTitle}</td>
-        <td>${issue.issueDate}</td>
-        <td>
-          <button class="btn success" onclick="markReturned(${index})">
-            Mark Returned
-          </button>
-        </td>
-      </tr>
+  issuedBooks.forEach(issue => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>${issue.studentName}</td>
+      <td>${issue.title}</td>
+      <td>${new Date(issue.issuedAt).toDateString()}</td>
+      <td>${new Date(issue.dueDate).toDateString()}</td>
+      <td>
+        <button class="btn success" onclick="markReturned('${issue.id}')">
+          Mark Returned
+        </button>
+      </td>
     `;
+
+    table.appendChild(row);
   });
 }
 
-function markReturned(index) {
-  const issues = JSON.parse(localStorage.getItem("issuedBooks"));
-  issues.splice(index, 1);
-  localStorage.setItem("issuedBooks", JSON.stringify(issues));
+/* ===============================
+   RETURN BOOK
+================================ */
+function markReturned(issueId) {
+  let issuedBooks = JSON.parse(localStorage.getItem("issuedBooks")) || [];
+  let books = JSON.parse(localStorage.getItem("books")) || [];
+
+  const issue = issuedBooks.find(i => i.id === issueId);
+  if (!issue) return;
+
+  // Restore book quantity
+  const book = books.find(b => b.id === issue.bookId);
+  if (book) {
+    book.quantity += 1;
+  }
+
+  // Remove issued record
+  issuedBooks = issuedBooks.filter(i => i.id !== issueId);
+
+  localStorage.setItem("books", JSON.stringify(books));
+  localStorage.setItem("issuedBooks", JSON.stringify(issuedBooks));
+
   loadIssues();
 }
-
-/* INIT */
-loadIssues();

@@ -1,35 +1,47 @@
 /* ======================================================
-   STUDENT MY BOOKS LOGIC
+   STUDENT – MY BOOKS
+   Source of truth: issuedBooks
 ====================================================== */
 
-const activeStudent = JSON.parse(localStorage.getItem("activeStudent"));
-const issued = JSON.parse(localStorage.getItem("issuedBooks") || []);
+const grid = document.getElementById("myBooksGrid");
+const emptyState = document.getElementById("emptyState");
 
-if (!activeStudent) {
-  alert("Please login as student first");
-  window.location.href = "../index.html";
-}
+function renderMyBooks() {
+  const student = JSON.parse(localStorage.getItem("activeStudent"));
+  const issuedBooks = JSON.parse(localStorage.getItem("issuedBooks")) || [];
 
-const myBooks = issued.filter(
-  b => b.roll === activeStudent.roll
-);
+  grid.innerHTML = "";
 
-const table = document.getElementById("myBooksTable");
-const empty = document.getElementById("emptyState");
+  if (!student) {
+    emptyState.style.display = "block";
+    emptyState.innerText = "Student not logged in.";
+    return;
+  }
 
-table.innerHTML = "";
+  const myIssuedBooks = issuedBooks.filter(
+    book => book.studentId === student.id
+  );
 
-if (myBooks.length === 0) {
-  empty.style.display = "block";
-} else {
-  empty.style.display = "none";
+  if (myIssuedBooks.length === 0) {
+    emptyState.style.display = "block";
+    return;
+  }
 
-  myBooks.forEach(book => {
-    table.innerHTML += `
-      <tr>
-        <td>${book.bookTitle}</td>
-        <td>${book.issueDate}</td>
-      </tr>
+  emptyState.style.display = "none";
+
+  myIssuedBooks.forEach(book => {
+    const card = document.createElement("div");
+    card.className = "book-card";
+
+    card.innerHTML = `
+      <img src="${book.image || '../assets/book-placeholder.png'}">
+      <h4>${book.title}</h4>
+      <p>Status: <strong>Issued</strong></p>
+      <p>Due Date: ${new Date(book.dueDate).toDateString()}</p>
     `;
+
+    grid.appendChild(card);
   });
 }
+
+document.addEventListener("DOMContentLoaded", renderMyBooks);

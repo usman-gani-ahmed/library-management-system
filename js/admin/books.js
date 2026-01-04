@@ -1,89 +1,114 @@
 /* ======================================================
-   ADMIN MANAGE BOOKS LOGIC (NO SAMPLE DATA)
+   ADMIN – MANAGE BOOKS
+   File: js/admin/books.js
 ====================================================== */
-
-function loadBooks() {
-  const books = JSON.parse(localStorage.getItem("books") || "[]");
-  const table = document.getElementById("booksTable");
-  const empty = document.getElementById("emptyState");
-
-  table.innerHTML = "";
-
-  if (books.length === 0) {
-    empty.style.display = "block";
-    return;
-  }
-
-  empty.style.display = "none";
-
-  books.forEach((book, index) => {
-    table.innerHTML += `
-      <tr>
-        <td>
-          <img src="${book.image}" style="width:50px;border-radius:6px">
-        </td>
-        <td>${book.title}</td>
-        <td>${book.author}</td>
-        <td>${book.course}</td>
-        <td>
-          <button class="btn danger" onclick="deleteBook(${index})">
-            Delete
-          </button>
-        </td>
-      </tr>
-    `;
+function toBase64(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = error => reject(error);
   });
 }
 
-function addBook() {
+/* ---------- ADD BOOK ---------- */
+async function addBook() {
   const title = document.getElementById("bookTitle").value.trim();
   const author = document.getElementById("bookAuthor").value.trim();
   const course = document.getElementById("bookCourse").value.trim();
-  const quantity = parseInt(document.getElementById("bookQuantity").value);
+  const quantityInput = document.getElementById("bookQuantity");
   const imageInput = document.getElementById("bookImage");
 
-  if (!title || !author || !course || !quantity || quantity < 1 || !imageInput.files[0]) {
-    alert("Please fill all fields correctly");
+  const quantity = parseInt(quantityInput.value);
+
+  if (!title || !author || !course || isNaN(quantity) || quantity <= 0) {
+    alert("Please fill all fields correctly.");
     return;
   }
 
-  const reader = new FileReader();
+  let imageBase64 = "";
 
-  reader.onload = function () {
-    const books = JSON.parse(localStorage.getItem("books") || "[]");
+  if (imageInput.files.length > 0) {
+    imageBase64 = await toBase64(imageInput.files[0]);
+  }
 
-    books.push({
-      id: "book_" + Date.now(),
-      title,
-      author,
-      course,
-      quantity,
-      available: quantity,
-      image: reader.result
-    });
+  const books = JSON.parse(localStorage.getItem("books") || "[]");
 
-    localStorage.setItem("books", JSON.stringify(books));
-    clearForm();
-    loadBooks();
-  };
+  books.push({
+    id: "book_" + Date.now(),
+    title,
+    author,
+    course,
+    quantity,
+    image: imageBase64   // ✅ STORED PERMANENTLY
+  });
 
-  reader.readAsDataURL(imageInput.files[0]);
-}
-
-function deleteBook(index) {
-  const books = JSON.parse(localStorage.getItem("books"));
-  books.splice(index, 1);
   localStorage.setItem("books", JSON.stringify(books));
-  loadBooks();
-}
 
-function clearForm() {
+  // Reset form
   document.getElementById("bookTitle").value = "";
   document.getElementById("bookAuthor").value = "";
   document.getElementById("bookCourse").value = "";
-  document.getElementById("bookQuantity").value = "";
-  document.getElementById("bookImage").value = "";
+  quantityInput.value = "";
+  imageInput.value = "";
+
+  renderBooks();
 }
 
-/* INIT */
-loadBooks();
+
+/* ---------- RENDER BOOKS ---------- */
+function renderBooks() {
+  const books = JSON.parse(localStorage.getItem("books") || "[]");
+  const tableBody = document.getElementById("booksTable");
+
+  tableBody.innerHTML = "";
+
+  if (books.length === 0) {
+    tableBody.innerHTML = `
+      <tr>
+        <td colspan="6" style="text-align:center;color:#94a3b8;">
+          No books added yet.
+        </td>
+      </tr>
+    `;
+    return;
+  }
+
+  books.forEach(book => {
+    const row = document.createElement("tr");
+
+    row.innerHTML = `
+      <td>
+        ${
+          book.image
+            ? `<img src="${book.image}" alt="cover" style="width:40px;border-radius:6px;">`
+            : "-"
+        }
+      </td>
+      <td>${book.title}</td>
+      <td>${book.author}</td>
+      <td>${book.course}</td>
+      <td>${book.quantity}</td>
+      <td>
+        <button class="btn danger" onclick="deleteBook('${book.id}')">
+          Delete
+        </button>
+      </td>
+    `;
+
+    tableBody.appendChild(row);
+  });
+}
+
+/* ---------- DELETE BOOK ---------- */
+function deleteBook(bookId) {
+  let books = JSON.parse(localStorage.getItem("books") || "[]");
+
+  books = books.filter(book => book.id !== bookId);
+
+  localStorage.setItem("books", JSON.stringify(books));
+  renderBooks();
+}
+
+/* ---------- INIT ---------- */
+document.addEventListener("DOMContentLoaded", renderBooks);

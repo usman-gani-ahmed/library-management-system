@@ -1,120 +1,115 @@
-/* ======================================================
-   STUDENT BOOK CATALOG – FINAL FIX
-====================================================== */
+const booksGrid = document.getElementById("booksGrid");
+const emptyState = document.getElementById("emptyState");
 
-document.addEventListener("DOMContentLoaded", () => {
+/* ===============================
+   RENDER BOOK CATALOG
+================================ */
+function renderBooks() {
+  const books = JSON.parse(localStorage.getItem("books")) || [];
+  const requests = JSON.parse(localStorage.getItem("bookRequests")) || [];
+  const student = JSON.parse(localStorage.getItem("activeStudent"));
 
-  // 1️⃣ Get identity
-  const activeStudent = JSON.parse(localStorage.getItem("activeStudent"));
-  const students = JSON.parse(localStorage.getItem("students") || []);
-
-  if (!activeStudent) {
-    alert("Please login as student first");
-    window.location.href = "../index.html";
-    return;
-  }
-
-  // 2️⃣ Get fresh student record
-  const me = students.find(
-    s => s.roll === activeStudent.roll && s.course === activeStudent.course
-  );
-
-  if (!me) {
-    alert("Student record not found. Please submit request again.");
-    window.location.href = "../index.html";
-    return;
-  }
-
-  if (!me.approved) {
-    alert("Your account is not approved yet");
-    window.location.href = "dashboard.html";
-    return;
-  }
-
-  // 3️⃣ Load books
-  const books = JSON.parse(localStorage.getItem("books") || []);
-
-// 🔧 FIX: Normalize old books (no available field)
-books.forEach(book => {
-  if (book.available === undefined) {
-    book.available = book.quantity ?? 1;
-  }
-});
-
-  const requests = JSON.parse(localStorage.getItem("bookRequests") || []);
-
-  const grid = document.getElementById("booksGrid");
-  const empty = document.getElementById("emptyState");
-
-  grid.innerHTML = "";
+  booksGrid.innerHTML = "";
 
   if (books.length === 0) {
-    empty.style.display = "block";
+    emptyState.style.display = "block";
     return;
-  } else {
-    empty.style.display = "none";
   }
 
-  // 4️⃣ Render books
+  emptyState.style.display = "none";
+
   books.forEach(book => {
+    const card = document.createElement("div");
+    card.className = "book-card";
 
-  // ✅ FIX: handle books without availability (old data)
-  if (book.available === undefined) {
-    book.available = book.quantity ? book.quantity : 1;
+    const alreadyRequested = requests.some(
+      r =>
+        r.bookId === book.id &&
+        r.studentId === student?.id &&
+        r.status === "pending"
+    );
+
+    let actionHTML = "";
+
+    if (book.quantity <= 0) {
+      actionHTML = `<span class="badge danger">Out of Stock</span>`;
+    } else if (alreadyRequested) {
+      actionHTML = `<span class="badge warning">Requested</span>`;
+    } else {
+      actionHTML = `
+        <button class="btn" onclick="requestBook('${book.id}')">
+          Request Book
+        </button>
+      `;
+    }
+
+    card.innerHTML = `
+      <img src="${book.image || '../assets/book-placeholder.png'}">
+      <h4>${book.title}</h4>
+      <p>Author: ${book.author}</p>
+      <p>Available: ${book.quantity}</p>
+      ${actionHTML}
+    `;
+
+    booksGrid.appendChild(card);
+  });
+}
+
+/* ===============================
+   REQUEST BOOK
+================================ */
+function requestBook(bookId) {
+  const student = JSON.parse(localStorage.getItem("activeStudent"));
+  const books = JSON.parse(localStorage.getItem("books")) || [];
+
+  if (!student) {
+    alert("Student not logged in");
+    return;
   }
 
-  // If no copies available, do not show
-  if (book.available <= 0) return;
+  const book = books.find(b => b.id === bookId);
+  if (!book || book.quantity <= 0) {
+    alert("Book not available");
+    return;
+  }
 
-  const alreadyRequested = requests.some(
+  let requests = JSON.parse(localStorage.getItem("bookRequests")) || [];
+
+  const exists = requests.find(
     r =>
-      r.roll === me.roll &&
-      r.bookTitle === book.title &&
+      r.bookId === bookId &&
+      r.studentId === student.id &&
       r.status === "pending"
   );
 
-  const card = document.createElement("div");
-  card.className = "card";
-
-  card.innerHTML = `
-    <img src="${book.image}"
-         style="width:100%;height:200px;object-fit:cover;
-                border-radius:10px;margin-bottom:12px">
-
-    <h3>${book.title}</h3>
-    <p class="subtitle">Author: ${book.author}</p>
-    <p class="subtitle">Course: ${book.course}</p>
-    <p class="subtitle">Available: ${book.available}</p>
-
-    <button class="btn" ${alreadyRequested ? "disabled" : ""}>
-      ${alreadyRequested ? "Requested" : "Request Book"}
-    </button>
-  `;
-
-  if (!alreadyRequested) {
-    card.querySelector("button").onclick = () => requestBook(book, me);
+  if (exists) {
+    alert("You have already requested this book");
+    return;
   }
-
-  grid.appendChild(card);
-});
-});
-/* ======================================================
-   REQUEST BOOK
-====================================================== */
-
-function requestBook(book, me) {
-  const requests = JSON.parse(localStorage.getItem("bookRequests") || []);
 
   requests.push({
     id: "req_" + Date.now(),
-    studentName: me.name,
-    roll: me.roll,
-    course: me.course,
+
+    // BOOK INFO
+    bookId: book.id,
     bookTitle: book.title,
-    status: "pending"
+
+    // STUDENT INFO
+    studentId: student.id,
+    studentName: student.name,
+    studentRoll: student.roll,
+
+    status: "pending",
+    requestedAt: new Date().toISOString()
   });
 
   localStorage.setItem("bookRequests", JSON.stringify(requests));
+
   alert("Book request sent to admin");
-  location.reload();
+  renderBooks(); // 🔁 refresh UI immediately
 }
+
+/* ===============================
+   INIT
+================================ */
+document.addEventListener("DOMContentLoaded", renderBooks);

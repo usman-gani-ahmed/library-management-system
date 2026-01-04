@@ -1,32 +1,35 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Book Catalog</title>
-
+  <meta charset="UTF-8">
+  <title>Browse Books</title>
   <link rel="stylesheet" href="../css/style.css">
 </head>
 
 <body>
 
-<!-- ===== HEADER ===== -->
 <header class="header">
-  <h1>Book Catalog</h1>
-  <button class="btn secondary" onclick="location.href='dashboard.html'">
+  <div>
+    <h2>Browse Books</h2>
+    <p class="subtitle">Explore available books and request issues</p>
+  </div>
+
+  <button
+    class="btn secondary"
+    onclick="location.href='dashboard.html'">
     Back
   </button>
 </header>
 
-<!-- ===== CONTENT ===== -->
 <main class="container">
 
-  <div class="grid cols-3" id="booksGrid">
-    <!-- Injected by JS -->
-  </div>
+  <div id="booksGrid" class="books-grid"></div>
 
-  <div id="emptyState" class="empty" style="display:none">
-    No books available at the moment.
+  <div
+    id="emptyState"
+    class="empty"
+    style="display:none; margin-top:24px">
+    No books available.
   </div>
 
 </main>
