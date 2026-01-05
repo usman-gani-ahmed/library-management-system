@@ -2,6 +2,7 @@
    ROOT VARIABLES
 ====================================================== */
 :root {
+<<<<<<< HEAD
   /* ===== Backgrounds ===== */
   --bg-main: #ffffff;          /* White main background */
   --bg-surface: #ffffff;       /* White cards & sections */
@@ -18,6 +19,17 @@
   --danger: #dc2626;           /* Red */
 
   /* ===== UI ===== */
+=======
+  --bg-main: #0f172a;
+  --bg-surface: #020617;
+  --border-color: #544155;
+  --text-main: #e5e7eb;
+  --text-muted: #94a3b8;
+  --primary: #7c3aed;
+  --success: #22c55e;
+  --warning: #facc15;
+  --danger: #ef4444;
+>>>>>>> 1af2086804aace40150948f42b610bd806c5a79c
   --radius: 14px;
 }
 
