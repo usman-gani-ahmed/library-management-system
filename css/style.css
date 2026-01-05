@@ -1202,7 +1202,7 @@ body > header.header h2 {
 
 
 .college-banner img {
-  width: 85%;
+  width: 100%;
   height: auto;
   max-height: 260px;
   object-fit: cover;
