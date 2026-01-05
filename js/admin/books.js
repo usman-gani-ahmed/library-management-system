@@ -104,11 +104,24 @@ function renderBooks() {
 function deleteBook(bookId) {
   let books = JSON.parse(localStorage.getItem("books") || "[]");
 
-  books = books.filter(book => book.id !== bookId);
+  // Try ID-based delete (new books)
+  let newBooks = books.filter(b => b.id !== bookId);
+
+  // If nothing changed, fallback for old books (no id)
+  if (newBooks.length === books.length) {
+    const index = books.findIndex(b => !b.id || b.id === undefined);
+    if (index !== -1) {
+      books.splice(index, 1);
+    }
+  } else {
+    books = newBooks;
+  }
 
   localStorage.setItem("books", JSON.stringify(books));
   renderBooks();
 }
 
+
 /* ---------- INIT ---------- */
 document.addEventListener("DOMContentLoaded", renderBooks);
+

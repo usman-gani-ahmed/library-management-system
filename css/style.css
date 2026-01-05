@@ -2,15 +2,22 @@
    ROOT VARIABLES
 ====================================================== */
 :root {
-  --bg-main: #0f172a;
-  --bg-surface: #020617;
-  --border-color: #334155;
-  --text-main: #e5e7eb;
-  --text-muted: #94a3b8;
-  --primary: #7c3aed;
-  --success: #22c55e;
-  --warning: #facc15;
-  --danger: #ef4444;
+  /* ===== Backgrounds ===== */
+  --bg-main: #ffffff;          /* White main background */
+  --bg-surface: #ffffff;       /* White cards & sections */
+  --border-color: #e5e7eb;     /* Light grey borders */
+
+  /* ===== Text ===== */
+  --text-main: #1f2933;        /* Dark readable text */
+  --text-muted: #6b7280;       /* Muted grey text */
+
+  /* ===== College Colors ===== */
+  --primary: #f97316;          /* College ORANGE */
+  --warning: #f59e0b;          /* Orange/yellow notice */
+  --success: #16a34a;          /* Green */
+  --danger: #dc2626;           /* Red */
+
+  /* ===== UI ===== */
   --radius: 14px;
 }
 
@@ -358,17 +365,25 @@ select:focus {
    ROOT VARIABLES
 ====================================================== */
 :root {
-  --bg-main: #0f172a;
-  --bg-surface: #020617;
-  --border-color: #334155;
-  --text-main: #e5e7eb;
-  --text-muted: #94a3b8;
-  --primary: #7c3aed;
-  --success: #22c55e;
-  --warning: #facc15;
-  --danger: #ef4444;
+  /* ===== Backgrounds ===== */
+  --bg-main: #ffffff;          /* White main background */
+  --bg-surface: #ffffff;       /* White cards & sections */
+  --border-color: #e5e7eb;     /* Light grey borders */
+
+  /* ===== Text ===== */
+  --text-main: #1f2933;        /* Dark readable text */
+  --text-muted: #6b7280;       /* Muted grey text */
+
+  /* ===== College Colors ===== */
+  --primary: #f97316;          /* College ORANGE */
+  --warning: #f59e0b;          /* Orange/yellow notice */
+  --success: #16a34a;          /* Green */
+  --danger: #dc2626;           /* Red */
+
+  /* ===== UI ===== */
   --radius: 14px;
 }
+
 
 /* ======================================================
    GLOBAL RESET
@@ -659,17 +674,25 @@ select {
    ROOT VARIABLES
 ====================================================== */
 :root {
-  --bg-main: #0f172a;
-  --bg-surface: #020617;
-  --border-color: #334155;
-  --text-main: #e5e7eb;
-  --text-muted: #94a3b8;
-  --primary: #7c3aed;
-  --success: #22c55e;
-  --warning: #facc15;
-  --danger: #ef4444;
+  /* ===== Backgrounds ===== */
+  --bg-main: #ffffff;          /* White main background */
+  --bg-surface: #ffffff;       /* White cards & sections */
+  --border-color: #e5e7eb;     /* Light grey borders */
+
+  /* ===== Text ===== */
+  --text-main: #1f2933;        /* Dark readable text */
+  --text-muted: #6b7280;       /* Muted grey text */
+
+  /* ===== College Colors ===== */
+  --primary: #f97316;          /* College ORANGE */
+  --warning: #f59e0b;          /* Orange/yellow notice */
+  --success: #16a34a;          /* Green */
+  --danger: #dc2626;           /* Red */
+
+  /* ===== UI ===== */
   --radius: 14px;
 }
+
 
 /* ======================================================
    GLOBAL RESET
@@ -1031,4 +1054,389 @@ body > header.header h2 {
   body > header.header h2 {
     font-size: 21px !important;
   }
+}
+
+/* ===============================
+   BORDER THICKNESS POLISH
+================================ */
+.card,
+.table,
+.role-card,
+.modal-box {
+  border-width: 2px;
+}
+
+/* ===============================
+   COLLEGE HEADER COLOR
+================================ */
+.header,
+.admin-header {
+  background: #0b4a8b;   /* College blue */
+  color: #ffffff;
+}
+
+.header h1,
+.header h2,
+.admin-header h2 {
+  color: #ffffff;
+}
+
+/* ===============================
+   ADMIN SIDEBAR POLISH
+================================ */
+.admin-sidebar {
+  background: #f8fafc;              /* Light neutral */
+  border-right: 1.5px solid #e5e7eb;
+}
+
+.admin-menu button {
+  color: #1f2937;                    /* Dark readable text */
+}
+
+.admin-menu button:hover {
+  background: rgba(249, 115, 22, 0.12); /* Soft orange hover */
+}
+
+/* ===============================
+   SOFT CARD & SECTION BACKGROUND
+================================ */
+.card,
+.table,
+.role-card,
+.modal-box {
+  background: #f1f5f9;        /* soft light blue-grey */
+  border-color: #cbd5e1;      /* slightly stronger border */
+}
+
+/* Text contrast safety */
+.card h2,
+.card h3,
+.role-card h2 {
+  color: #0f172a;
+}
+
+.card p,
+.role-card p {
+  color: #475569;
+}
+
+/* ===============================
+   HEADER BUTTON VISIBILITY FIX
+================================ */
+.header .btn.secondary,
+.admin-header .btn.secondary {
+  background: #f97316;      /* college orange */
+  color: #ffffff;
+  border: none;
+}
+
+.header .btn.secondary:hover,
+.admin-header .btn.secondary:hover {
+  background: #ea580c;
+}
+
+/* ===============================
+   SECTION DEPTH (VERY SUBTLE)
+================================ */
+.card,
+.role-card,
+.modal-box {
+  box-shadow: 0 4px 10px rgba(0,0,0,0.04);
+}
+
+/* ===============================
+   COLLEGE TRANSLUCENT YELLOW
+================================ */
+:root {
+  --college-yellow-soft: rgba(225, 144, 2, 0.12); /* translucent yellow */
+  --college-yellow-border: rgba(245, 158, 11, 0.35);
+}
+
+.card,
+.role-card,
+.modal-box,
+.table {
+  background: var(--college-yellow-soft);
+  border: 2px solid var(--college-yellow-border);
+}
+
+/* ===============================
+   FIX BOOK CARD BORDERS
+================================ */
+.book-card {
+  border: 1px solid var(--college-yellow-border) !important;
+  background: var(--college-yellow-soft);
+}
+
+/* ===============================
+   HEADER TEXT VISIBILITY FIX
+================================ */
+.header h2,
+.header h1 {
+  color: #0f172a;   /* dark navy like college site */
+  font-weight: 600;
+}
+
+/* ===============================
+   HEADER TEXT VISIBILITY FIX
+================================ */
+.header h2,
+.header h1 {
+  color: #0f172a;   /* dark navy like college site */
+  font-weight: 600;
+}
+
+/* ===============================
+   STUDENT PAGE TEXT CLARITY
+================================ */
+.book-card h4,
+.book-card p,
+.card h3,
+.card p {
+  color: #1e293b; /* dark readable slate */
+}
+
+.role-card p {
+  margin-bottom: 16px;
+}
+
+
+.college-banner img {
+  width: 85%;
+  height: auto;
+  max-height: 260px;
+  object-fit: cover;
+  display: block;
+
+  margin: 0 auto;            /* ✅ centers the image */
+
+  border-bottom: 4px solid #0d4c8b; /* college blue */
+}
+
+/* ===== FIX GAP BETWEEN BANNER & LANDING ===== */
+.landing {
+  min-height: calc(100vh - 260px); /* accounts for banner height */
+  padding-top: 10px; /* reduce vertical gap */
+}
+
+.landing-container {
+  padding-top: 5%;
+  margin-top: 0;
+}
+
+/* ======================================================
+   FIX MODAL VISIBILITY (ADMIN & STUDENT POPUPS)
+====================================================== */
+
+/* Dark overlay stays same – no change */
+.overlay {
+  background: rgba(0, 0, 0, 0.65);
+}
+
+/* Make modal box solid & readable */
+.modal-box {
+  background: #fff6e8;              /* soft college-style yellow */
+  color: #1f2937;                   /* dark readable text */
+  border: 2px solid #f59e0b;        /* orange boundary */
+  box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+}
+
+/* Modal headings */
+.modal-box h2 {
+  color: #0d4c8b;                   /* college blue */
+}
+
+/* Modal paragraph text */
+.modal-box p {
+  color: #374151;
+}
+
+/* Inputs inside modal */
+.modal-box .input {
+  background: #ffffff;
+  color: #1f2937;
+  border: 1px solid #d1d5db;
+}
+
+.modal-box .input::placeholder {
+  color: #6b7280;
+}
+
+/* Buttons inside modal */
+.modal-box .btn {
+  background: #f97316;              /* orange */
+  color: #ffffff;
+}
+
+.modal-box .btn.secondary {
+  background: transparent;
+  border: 1px solid #0d4c8b;
+  color: #0d4c8b;
+}
+
+/* ======================================================
+   ADMIN SIDEBAR – LOGO & SPACING FIX
+====================================================== */
+
+.sidebar-logo {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.sidebar-logo img {
+  width: 90px;
+  height: auto;
+}
+
+/* Prevent Admin Panel merging */
+.sidebar-title {
+  margin-bottom: 18px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid #0d4c8b; /* college blue */
+  text-align: center;
+}
+
+/* ======================================================
+   STUDENT HEADER – EXACT DASHBOARD MATCH
+====================================================== */
+
+.student-header {
+  min-height: 64px;              /* same as dashboard */
+  padding: 12px 20px;            /* tighter */
+  display: flex;
+  align-items: center;           /* vertical center */
+  background: #0d4c8b;           /* college blue */
+}
+
+/* Header title */
+.student-header h2 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+/* Back / Logout buttons */
+.student-header .btn {
+  background: #ff8c1a;           /* college orange */
+  color: #fff;
+  border: none;
+}
+
+.student-header .btn.secondary {
+  background: transparent;
+  border: 1px solid rgba(255,255,255,0.6);
+  color: #ffffff;
+}
+
+/* ======================================================
+   STUDENT HEADER – FINAL FIX (BROWSE + MY BOOKS)
+====================================================== */
+
+.student-header {
+  min-height: 52px;                 /* ⬅ slimmer header */
+  padding: 8px 18px;                /* ⬅ reduced height */
+  display: flex;
+  align-items: center;
+  background: #0d4c8b;              /* college blue */
+}
+
+/* Title */
+.student-header h2 {
+  font-size: 21px;                  /* slightly bigger */
+  font-weight: 600;
+  color: #ffffff;
+  line-height: 1.2;
+}
+
+/* Subtitle / line under title (if present) */
+.student-header .subtitle,
+.student-header p {
+  color: #e6eef7;                   /* ⬅ visible light white-blue */
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+/* Back button – DEFAULT */
+.student-header .btn,
+.student-header .btn.secondary {
+  background: #ff8c1a;              /* orange */
+  color: #ffffff;
+  border: none;
+  padding: 6px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+
+/* Hover effect */
+.student-header .btn:hover,
+.student-header .btn.secondary:hover {
+  background: #e67600;              /* darker orange */
+}
+
+/* ======================================================
+   STUDENT HEADER – TEXT & BUTTON VISUAL FIX ONLY
+   (NO SIZE / WIDTH CHANGES)
+====================================================== */
+
+.header.student-header {
+  align-items: center;            /* ensure vertical alignment */
+}
+
+/* Move text block slightly down & center it visually */
+.header.student-header > div {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding-top: 4px;               /* brings text down */
+}
+
+/* Increase header title size */
+.header.student-header h2 {
+  font-size: 26px;                /* bigger text */
+  line-height: 1.2;
+  margin-bottom: 4px;
+}
+
+/* Subtitle clarity */
+.header.student-header .subtitle {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* Increase Back button size */
+.header.student-header .btn {
+  padding: 10px 20px;             /* bigger button */
+  font-size: 15px;
+  border-radius: 8px;
+}
+
+/* Make Back button orange & visible */
+.header.student-header .btn.secondary {
+  background: #ff8c1a;
+  color: #ffffff;
+  border: none;
+}
+
+.header.student-header .btn.secondary:hover {
+  background: #e67600;
+}
+
+/* ======================================================
+   STUDENT DASHBOARD HEADER – TITLE COLOR FIX
+====================================================== */
+
+.header h1 {
+  color: #ffffff;
+}
+
+/* ======================================================
+   STUDENT DASHBOARD – TEXT ↔ BUTTON SPACING
+====================================================== */
+
+.card p {
+  margin-bottom: 16px;   /* creates breathing space */
+}
+
+.card .btn {
+  margin-top: 8px;       /* separates button from text */
 }
